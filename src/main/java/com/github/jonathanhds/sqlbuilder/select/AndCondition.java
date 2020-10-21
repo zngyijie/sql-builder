@@ -4,12 +4,12 @@ import com.github.jonathanhds.sqlbuilder.Context;
 
 class AndCondition extends Condition {
 
-	AndCondition(Context context) {
-		super(context);
-	}
+    AndCondition(Context context) {
+        super(context);
+    }
 
-	@Override
-	protected String getPrefix() {
-		return "AND";
-	}
+    @Override
+    protected String getPrefix() {
+        return "AND";
+    }
 }

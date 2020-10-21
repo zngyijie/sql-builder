@@ -1,107 +1,109 @@
 package com.github.jonathanhds.sqlbuilder.select;
 
-import com.github.jonathanhds.sqlbuilder.Context;
-import com.github.jonathanhds.sqlbuilder.TerminalExpression;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 
+import com.github.jonathanhds.sqlbuilder.Context;
+import com.github.jonathanhds.sqlbuilder.TerminalExpression;
+
 public class From implements TerminalExpression {
-	private Context context;
+    private final Context context;
 
-	private boolean terminated = false;
+    private boolean terminated = false;
 
-	private final List<String> tables = new ArrayList<>();
+    private final List<String> tables = new ArrayList<>();
 
-	From(Context context) {
-		this.context = context;
-		this.context.appendLine("FROM");
-	}
+    From(Context context) {
+        this.context = context;
+        this.context.appendLine("FROM");
+    }
 
-	public From table(String table) {
-		tables.add(table);
-		return this;
-	}
+    public From table(String table) {
+        tables.add(table);
+        return this;
+    }
 
-	public From tables(String... tables) {
-		this.tables.addAll(Arrays.asList(tables));
-		return this;
-	}
+    public From tables(String... tables) {
+        this.tables.addAll(Arrays.asList(tables));
+        return this;
+    }
 
-	public From select(String selectQuery, String alias) {
-		this.tables.add("(" + selectQuery + ") " + alias);
-		return this;
-	}
+    public From select(String selectQuery, String alias) {
+        this.tables.add("(" + selectQuery + ") " + alias);
+        return this;
+    }
 
-	public Where where() {
-		terminate();
-		return new Where(context);
-	}
+    public Where where() {
+        terminate();
+        return new Where(context);
+    }
 
-	public Where where(String condition) {
-		terminate();
-		return new Where(context, condition);
-	}
+    public Where where(String condition) {
+        terminate();
+        return new Where(context, condition);
+    }
 
-	public GroupBy groupBy() {
-		terminate();
-		return new GroupBy(context);
-	}
+    public GroupBy groupBy() {
+        terminate();
+        return new GroupBy(context);
+    }
 
-	public GroupBy groupBy(String... columns) {
-		terminate();
-		return new GroupBy(context, columns);
-	}
+    public GroupBy groupBy(String... columns) {
+        terminate();
+        return new GroupBy(context, columns);
+    }
 
-	public Join leftOuterJoin(String condition) {
-		terminate();
-		return new LeftOuterJoin(context, condition);
-	}
+    public Join leftOuterJoin(String condition) {
+        terminate();
+        return new LeftOuterJoin(context, condition);
+    }
 
-	public Join rightOuterJoin(String condition) {
-		terminate();
-		return new RightOuterJoin(context, condition);
-	}
+    public Join rightOuterJoin(String condition) {
+        terminate();
+        return new RightOuterJoin(context, condition);
+    }
 
-	public Join innerJoin(String condition) {
-		terminate();
-		return new InnerJoin(context, condition);
-	}
+    public Join innerJoin(String condition) {
+        terminate();
+        return new InnerJoin(context, condition);
+    }
 
-	public OrderBy orderBy() {
-		terminate();
-		return new OrderBy(context);
-	}
+    public OrderBy orderBy() {
+        terminate();
+        return new OrderBy(context);
+    }
 
-	public Limit limit(int start, int size) {
-		terminate();
-		return new Limit(context, start, size);
-	}
+    public Limit limit(int start, int size) {
+        terminate();
+        return new Limit(context, start, size);
+    }
 
-	public <E> List<E> list(RowMapper<E> rowMapper) throws SQLException {
-		terminate();
-		return context.list(rowMapper);
-	}
+    public <E> List<E> list(RowMapper<E> rowMapper) throws SQLException {
+        terminate();
+        return context.list(rowMapper);
+    }
 
-	public <E> E single(RowMapper<E> rowMapper) throws SQLException {
-		terminate();
-		return context.single(rowMapper);
-	}
+    public <E> E single(RowMapper<E> rowMapper) throws SQLException {
+        terminate();
+        return context.single(rowMapper);
+    }
 
-	@Override
-	public String toString() {
-		terminate();
-		return context.toString();
-	}
+    @Override
+    public String toString() {
+        terminate();
+        return context.toString();
+    }
 
-	private void terminate() {
-		if (!terminated) {
-			final String newLine = System.getProperty("line.separator");
-			this.context.appendLine(StringUtils.join(tables, "," + newLine));
-			this.context.appendLine(newLine);
-			terminated = true;
-		}
-	}
+    private void terminate() {
+        if (!terminated) {
+            final String newLine = System.getProperty("line.separator");
+            this.context.appendLine(StringUtils.join(tables, "," + newLine));
+            this.context.appendLine(newLine);
+            terminated = true;
+        }
+    }
 }

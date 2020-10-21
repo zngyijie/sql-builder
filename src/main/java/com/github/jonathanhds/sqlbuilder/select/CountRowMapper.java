@@ -5,8 +5,8 @@ import java.sql.SQLException;
 
 public class CountRowMapper extends RowMapper<Integer> {
 
-	@Override
-	public Integer convert(ResultSet resultSet, int rowNum) throws SQLException {
-		return resultSet.getInt(1);
-	}
+    @Override
+    public Integer convert(ResultSet resultSet, int rowNum) throws SQLException {
+        return resultSet.getInt(1);
+    }
 }
